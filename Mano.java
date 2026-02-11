@@ -37,5 +37,18 @@ public class Mano {
              }
            }
          }
+
+    public boolean estaPasado() {
+        if (obtenerValorMano() > 21) {
+            return true; //Si el valor total de la mano es mayor a 21, el jugador ha pasado
+        }
+        return false; //Si el valor total de la mano es 21 o menor, el jugador no ha pasado
+    }
+
+    public boolean tieneBlackjack() {
+        if (obtenerValorMano() == 21 && cartas.size() == 2) { //Si el valor total de la mano es 21 y el jugador tiene exactamente 2 cartas, el jugador tiene blackjack
+            return true;
+        }
+        return false; //Si el valor total de la mano no es 21 o el jugador tiene mas de 2 cartas, el jugador no tiene blackjack
     }
 
