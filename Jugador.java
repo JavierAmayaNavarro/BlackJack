@@ -45,7 +45,7 @@ public class Jugador {
     // Pedir carta
     public void pedirCarta(Mazo mazo) {
         Carta carta = mazo.repartirCarta(); // Obtenemos una carta del mazo y la añadimos a la mano del jugador
-        mano.añadirCarta(carta); // Añadimos la carta a la mano del jugador
+        mano.agregarCarta(carta); // Añadimos la carta a la mano del jugador
     }
 
     // Plantarse
