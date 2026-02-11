@@ -13,7 +13,27 @@ public class Carta {
         this.valor = cValor; 
     }
 
-    /* Setters y Getters */
+    /* Getters */
 
+    public String getPalo(){
+        return this.palo; //El this se refiere a los atributos de la clase carta, fuera del constructor
+    }
+
+    public String getValor(){
+        return this.valor; //Hace referencia al valor de la carta fuera del constructor
+    }
+
+    // Los setters no los vamos a cambiar ya que la carta no va a cambiar su valor ni su palo, solamente la vamos a obtener sin llegar a modificarla 
     
+
+
+    /* Metodos */
+
+    //Metodo para ver el valor de la carta
+
+    public int getValorNumerico() {
+        if (this.valor.equals("J")) || this.valor.equals("Q") || this.valor.equals("K")
+
+    }
+
 }
