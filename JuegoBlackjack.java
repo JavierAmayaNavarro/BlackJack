@@ -30,8 +30,8 @@ public class JuegoBlackjack {
             numJugadores = scanner.nextInt(); //Leemos el nuevo numero de jugadores ingresado por el usuario
         }
         scanner.nextLine(); //Limpiamos el buffer del Scanner para evitar problemas al leer el nombre de los jugadores
-        for (int i = 1; i<numJugadores; i++) { 
-            System.out.print("Ingrese el nombre del jugador " + i + ": "); //Pedimos al usuario que ingrese el nombre de cada jugador
+        for (int i = 0; i<numJugadores; i++) { 
+            System.out.print("Ingrese el nombre del jugador " + (i+1)+ ": "); //Pedimos al usuario que ingrese el nombre de cada jugador
             String nombreJugador = scanner.nextLine(); //Leemos el nombre del jugador ingresado por el usuario
             jugadores.add(new Jugador(nombreJugador)); //Agregamos el jugador al ArrayList de jugadores
         }
@@ -80,30 +80,29 @@ public class JuegoBlackjack {
     }
 
     private void ganador() {
-
     int valorCrupier = crupier.getMano().obtenerValorMano();
 
+    // Recorremos solo los jugadores, no al crupier
     for (Jugador j : jugadores) {
-
         int valorJugador = j.getMano().obtenerValorMano();
 
+        // Si el jugador se pasa, lo saltamos
         if (j.getMano().estaPasado()) {
             continue;
         }
 
+        // Comparamos las puntuaciones del jugador y el crupier
         if (crupier.getMano().estaPasado() || valorJugador > valorCrupier) {
-            j.sumarPunto();
+            j.sumarPunto(); // El jugador gana
             System.out.println(j.getNombre() + " gana la ronda!");
-        }
-        else if (valorJugador == valorCrupier) {
+        } else if (valorJugador == valorCrupier) {
             System.out.println("Empate entre " + j.getNombre() + " y el crupier.");
-        }
-        else {
-            crupier.sumarPunto();
+        } else {
+            crupier.sumarPunto(); // El crupier gana
             System.out.println("El crupier gana contra " + j.getNombre());
         }
     }
-    }
+}
 
     public static void main(String[] args) {
         JuegoBlackjack juego = new JuegoBlackjack(); //Creamos una instancia del juego de Blackjack
