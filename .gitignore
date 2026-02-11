@@ -1,0 +1,57 @@
+Ignorar archivos de sistema
+.DS_Store
+Thumbs.db
+
+Archivos de configuración específicos de editores de texto
+.vscode/
+.idea/
+*.swp
+*.swo
+
+Archivos generados por compiladores y herramientas
+*.log
+*.tmp
+*.bak
+*.swp
+
+Archivos de dependencias de Node.js (si aplicable)
+node_modules/
+npm-debug.log
+
+Archivos de Python (si aplicable)
+pycache/
+*.pyc
+*.pyo
+*.pyd
+*.db
+
+Archivos de compilación de Java (si aplicable)
+*.class
+*.jar
+*.war
+
+Archivos de entorno virtual
+.venv/
+env/
+venv/
+
+Ignorar archivos de configuración específicos de Windows
+desktop.ini
+
+Ignorar archivos de configuraciones de JetBrains
+*.iml
+
+Ignorar configuraciones de Git
+.gitconfig
+
+Ignorar archivos de lock de dependencias (si se usa)
+yarn.lock
+package-lock.json
+
+Archivos de bases de datos locales (si aplicable)
+*.sqlite
+*.db
+
+Ignorar archivos generados por el sistema de construcción (si es necesario)
+dist/
+build/
