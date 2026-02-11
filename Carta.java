@@ -2,8 +2,8 @@ public class Carta {
 
     /*ATRIBUTOS DE LA VARIABLE CARTA */
 
-    public String palo; //(♠ ♥ ♦ ♣)
-    public String valor; //(2–10, J, Q, K, A)
+    private String palo; //(♠ ♥ ♦ ♣) //Se pone privado ya que no queremos que nadie de afuera de la clase pueda modificar el palo de la carta, solo queremos que lo obtengan mediante los getters
+    private String valor; //(2–10, J, Q, K, A)
 
     /* Contructores */
 
