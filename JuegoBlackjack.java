@@ -57,7 +57,7 @@ public class JuegoBlackjack {
             crupier.pedirCarta(mazo); //Repartimos una carta al crupier utilizando el metodo pedirCarta
             crupier.pedirCarta(mazo); //Repartimos una segunda carta al crupier utilizando el metodo pedirCarta
 
-            crupier.jugarTurno(mazo, null); //El crupier juega su turno utilizando el metodo jugarTurno, que hace que el crupier siga pidiendo cartas hasta que su mano tenga un valor de al menos 17
+            crupier.jugarTurno(mazo); //El crupier juega su turno utilizando el metodo jugarTurno, que hace que el crupier siga pidiendo cartas hasta que su mano tenga un valor de al menos 17
 
             // Determinamos el jugador
 
