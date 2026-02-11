@@ -51,4 +51,4 @@ public class Mano {
         }
         return false; //Si el valor total de la mano no es 21 o el jugador tiene mas de 2 cartas, el jugador no tiene blackjack
     }
-
+}
