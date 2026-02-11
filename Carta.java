@@ -42,8 +42,7 @@ public class Carta {
         return Integer.parseInt(this.valor); //Convierte el valor de la carta a un numero entero a partir de 2 - 10 
 
     }
-
-
+    
     @Override
     public String toString() {
         return this.valor + " de " + this.palo; //Devuelve el valor de la carta y su palo
