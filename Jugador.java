@@ -42,6 +42,12 @@ public class Jugador {
         puntos++;
     }
 
+    //Devolvemos los puntos del jugador
+
+    public int obtenerPuntos() {
+        return puntos; //Devolvemos los puntos del jugador
+    }
+
     // Pedir carta
     public void pedirCarta(Mazo mazo) {
         Carta carta = mazo.repartirCarta(); // Obtenemos una carta del mazo y la añadimos a la mano del jugador
@@ -64,4 +70,5 @@ public class Jugador {
     public boolean esValido() {
         return !mano.estaPasado() && !mano.tieneBlackjack(); //Si la mano del jugador no pasa de 21 y no tiene blackjack, el jugador puede seguir jugando
     }
+
 }
