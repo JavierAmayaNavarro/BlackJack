@@ -23,9 +23,19 @@ public class Mano {
                 numAses++; //Si la carta es un As, incrementamos el contador de Ases
              }
 
-             while (valortotal > 21 && numAses > 0) //Si el valor total de la mano es mayor a 21 y tenemos ases en la mano, podemos utilizar los ases como valor de 1 en lugar de 11
-             
+             while (valortotal > 21 && numAses > 0) {//Si el valor total de la mano es mayor a 21 y tenemos ases en la mano, podemos utilizar los ases como valor de 1 en lugar de 11
+                valortotal -= 10; //Restamos 10 al valor total para tratar el As como 1 en lugar de 11
+                numAses--; //Decrementamos el contador de Ases
             }
+            return valortotal;
+
         }
+        public void mostrarMano() {
+           System.out.println("Cartas en la mano:");
+           for (Carta carta : cartas) {
+            System.out.println(carta.toString()); //Imprimimos cada carta en la mano utilizando el metodo toString de la clase Carta
+             }
+           }
+         }
     }
-}
+
