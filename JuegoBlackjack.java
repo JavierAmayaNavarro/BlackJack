@@ -78,8 +78,48 @@ public class JuegoBlackjack {
         }
     }
 
+    private void ganador() {
+
+    int valorCrupier = crupier.getMano().calcularValor();
+
+    for (Jugador j : jugadores) {
+
+        int valorJugador = j.getMano().calcularValor();
+
+        if (j.getMano().estaPasado()) {
+            continue;
+        }
+
+        if (crupier.getMano().estaPasado() || valorJugador > valorCrupier) {
+            j.sumarPunto();
+            System.out.println(j.getNombre() + " gana la ronda!");
+        }
+        else if (valorJugador == valorCrupier) {
+            System.out.println("Empate entre " + j.getNombre() + " y el crupier.");
+        }
+        else {
+            crupier.sumarPunto();
+            System.out.println("El crupier gana contra " + j.getNombre());
+        }
+    }
     }
 
+    private void turnoJugador(Jugador jugador) {
 
-    
+    while (!jugador.isPlantado() && jugador.esValido()) {
+
+        System.out.println("\nTurno de " + jugador.getNombre());
+        System.out.println("Valor actual: " + jugador.getMano().calcularValor());
+        System.out.println("1. Pedir carta");
+        System.out.println("2. Plantarse");
+
+        int opcion = scanner.nextInt();
+
+        if (opcion == 1) {
+            jugador.pedirCarta(mazo);
+        } else {
+            jugador.plantarse();
+        }
+    }
+}
 }
