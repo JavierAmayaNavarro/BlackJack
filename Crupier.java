@@ -45,7 +45,7 @@ public class Crupier extends Jugador {
         turnoActivo = true;
         revelarCartaOculta();
         // El crupier pide cartas hasta llegar a 17 o pasarse
-        while (getMano().calcularPuntuacion() < MINIMO_CRUPIER) {
+        while (getMano().obtenerValorMano() < MINIMO_CRUPIER) {
             Carta nueva = mazo.repartirCarta();
             nueva.setBocaAbajo(false);
             getMano().agregarCarta(nueva);
@@ -60,17 +60,17 @@ public class Crupier extends Jugador {
 
     /** Puntuación total de la mano del crupier (todas las cartas, incluyendo ocultas). */
     public int getPuntuacionTotal() {
-        return getMano().calcularPuntuacion();
+        return getMano().obtenerValorMano();
     }
 
     /** Puntuación visible (solo cartas boca arriba). */
     public int getPuntuacionVisible() {
-        return getMano().calcularPuntuacion();
+        return getMano().obtenerValorMano();
     }
 
     /** Devuelve true si el crupier se ha pasado de 21. */
     public boolean estaPasado() {
-        return getMano().calcularPuntuacionTotal() > 21;
+        return getMano().obtenerValorMano() > 21;
     }
 
     /** Devuelve true si el crupier tiene Blackjack natural. */

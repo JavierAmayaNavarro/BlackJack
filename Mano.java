@@ -62,5 +62,10 @@ public class Mano {
         }
         return false; //Si el valor total de la mano no es 21 o el jugador tiene mas de 2 cartas, el jugador no tiene blackjack
     }
+
+    /* Getters */ 
+    public List<Carta> getCartas() { //Metodo para obtener la lista de cartas en la mano 
+        return cartas;
+    }
 }
 
