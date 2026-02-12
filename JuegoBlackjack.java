@@ -127,7 +127,7 @@ public class JuegoBlackjack {
         crupier.recibirCarta(mazo.repartirCarta(), false);
 
         // Segunda carta a todos (crupier boca abajo)
-        for (Jugador j : jugadores) j.obtenerCarta(mazo.repartirCarta());
+        for (Jugador j : jugadores) j.pedirCarta(mazo.repartirCarta());
         crupier.recibirCarta(mazo.repartirCarta(), true);
     }
 
