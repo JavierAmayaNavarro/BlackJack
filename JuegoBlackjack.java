@@ -3,12 +3,20 @@ import java.util.Scanner;
 
 public class JuegoBlackjack {
 
+    /* Constantes */
+
+    // ─── Constantes ────────────────────────────────────────────────────────────
+    private static final int PUNTOS_VICTORIA = 5;
+    private static final String LINEA = "═══════════════════════════════════════════════════";
+    private static final String LINEA_FINA = "───────────────────────────────────────────────────";
+
     /* Atributos del juego */
 
     private ArrayList<Jugador> jugadores; //Creamos un ArrayList de jugadores para representar a los jugadores en el juego
     private Crupier crupier; //Creamos una variable de tipo Crupier para representar al crupier en el juego
     private Mazo mazo;
     private Scanner scanner; //Creamos un objeto Scanner para leer la entrada del usuario
+    private int numero_de_Ronda; //Variable para llevar el conteo de las rondas del juego
 
     /* Constructores del juego */
     public JuegoBlackjack() {
@@ -16,6 +24,7 @@ public class JuegoBlackjack {
         crupier = new Crupier(); //Creamos un nuevo crupier
         mazo = new Mazo(); //Creamos un nuevo mazo de cartas
         scanner = new Scanner(System.in); //Inicializamos el Scanner para leer la entrada del usuario
+        numero_de_Ronda = 0; //Inicializamos el conteo de rondas a 0 }
     }
 
     /* Metodos del juego */
@@ -45,9 +54,9 @@ public class JuegoBlackjack {
 
             // Reiniciamos las manos de cada jugador y del crupier cada vez que la ronda comienza de nuevo 
             for (Jugador jugador : jugadores) {
-                jugador.reiniciar(); //Reiniciamos la mano y el estado de plantado de cada jugador al comenzar cada ronda
+                jugador.reiniciarRonda(); //Reiniciamos la mano y el estado de plantado de cada jugador al comenzar cada ronda
             }
-            crupier.reiniciar(); //Reiniciamos la mano del crupier al comenzar cada ronda
+            crupier.reiniciarRonda(); //Reiniciamos la mano del crupier al comenzar cada ronda
 
             // Repartimos dos cartas a cada jugador y al crupier al comenzar cada ronda , ( El juego se empieza con 2 cartas para cada jugador y el crupier) ##PRUEBA##
             for (Jugador jugador : jugadores) {
@@ -102,10 +111,5 @@ public class JuegoBlackjack {
             System.out.println("El crupier gana contra " + j.getNombre());
         }
     }
-}
-
-    public static void main(String[] args) {
-        JuegoBlackjack juego = new JuegoBlackjack(); //Creamos una instancia del juego de Blackjack
-        juego.iniciarJuego(); //Iniciamos el juego llamando al metodo iniciarJuego
     }
 }

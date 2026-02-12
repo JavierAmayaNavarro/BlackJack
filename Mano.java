@@ -1,7 +1,8 @@
+import java.util.List; 
 import java.util.ArrayList;
 
 public class Mano {
-    private ArrayList<Carta> cartas; //Creamos un ArrayList de cartas para representar la mano del jugador
+    private List<Carta> cartas; //Creamos una lista de cartas para representar la mano del jugador
 
     //Constructor de la clase Mano
     public Mano() {
@@ -11,6 +12,13 @@ public class Mano {
     public void agregarCarta(Carta carta) {
         cartas.add(carta); //Agregamos una carta a la mano utilizando el metodo add del ArrayList
     }
+
+
+    /* Te deja la mano vacia, cada vez que cominezas una nueva ronda. */
+    public void limpiar() {
+        cartas.clear();
+    }
+
 
     public int obtenerValorMano() {
         int valortotal = 0;

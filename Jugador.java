@@ -6,6 +6,7 @@ public class Jugador {
     private Mano mano; //Mano del jugador que es un objeto de la clase Mano
     private int puntos; //Puntos del jugador
     private boolean plantado; //Indica si el jugador se ha plantado o no
+    private boolean eliminado; //Indica si el jugador ha sido eliminado del juego o no 
 
     /* Constructores */
 
@@ -14,6 +15,7 @@ public class Jugador {
         this.mano = new Mano(); //Creamos una nueva mano para el jugador
         this.puntos = 0; //Iniciamos los puntos a 0 del jugador
         this.plantado = false; //Reniciamos la variable plantado
+        this.eliminado = false; //Reiniciamos la variable eliminado
 
     }
 
@@ -35,14 +37,12 @@ public class Jugador {
         return this.plantado; //Devolvemos si el jugador se ha plantado o no
     }
 
-        /* Metodos  */
-
-    // Sumar punto cuando gana ronda
-    public void sumarPunto() {
-        puntos++;
+    public boolean isEliminado() {
+         return this.eliminado; //Devolvemos si el jugador ha sido eliminado o no
     }
 
-    //Devolvemos los puntos del jugador
+
+    /* Metodos  */
 
     public int obtenerPuntos() {
         return puntos; //Devolvemos los puntos del jugador
@@ -54,21 +54,45 @@ public class Jugador {
         mano.agregarCarta(carta); // Añadimos la carta a la mano del jugador
     }
 
+    // Reiniciar para nueva ronda
+    public void reiniciarRonda() {
+        mano.limpiar(); //Limpiamos la mano del jugador
+        plantado = false; //Reinicializamos la variable plantado al comenzar la ronda
+        eliminado = false; //Reinicializamos la variable eliminado al comenzar la ronda
+    }
+
     // Plantarse
     public void plantarse() {
         plantado = true;
     }
 
-    // Reiniciar para nueva ronda
-    public void reiniciar() {
-        mano = new Mano(); //Creamos una nueva mano para el jugador
-        plantado = false; //Reinicializamos la variable plantado al comenzar la ronda
+    // Sumar punto cuando gana ronda
+    public void sumarPunto() {
+        puntos++;
     }
+
 
 
     // Comprobar si puede seguir jugando
     public boolean esValido() {
-        return !mano.estaPasado() && !mano.tieneBlackjack(); //Si la mano del jugador no pasa de 21 y no tiene blackjack, el jugador puede seguir jugando
+        if (mano.estaPasado() || mano.tieneBlackjack()) {
+            eliminado = true; //Si la mano del jugador pasa de 21 o tiene blackjack, el jugador es eliminado del juego
+            return false; //Si la mano del jugador pasa de 21 o tiene blackjack, el jugador no puede seguir jugando
+        } else {
+            return true; //Si la mano del jugador no pasa de 21 y no tiene blackjack, el jugador puede seguir jugando
+        }
+    }
+
+    // Devuelve true si el turno del jugador ha terminado (platando,blackjack o eliminado)
+
+    public boolean turnoTerminado() {
+        return plantado || mano.estaPasado() || mano.tieneBlackjack() || eliminado;  //El turno del jugador termina si se ha plantado, si su mano pasa de 21, si tiene blackjack o si ha sido eliminado
+    
+    }
+    /* Metodo toString para mostrar el nombre del jugador al imprimir el objeto Jugador */
+
+    @Override public String toString() {
+        return nombre + "[Puntos: " + puntos + "]"; //Devolvemos el nombre del jugador al imprimir el objeto Jugador
     }
 
 }
