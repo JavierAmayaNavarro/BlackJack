@@ -1,4 +1,5 @@
-package BlackJack.src.BlackJack;
+package BlackJack;
+
 public class Jugador {
 
     /* Atributos de la clase Jugador */

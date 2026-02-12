@@ -1,4 +1,5 @@
-package BlackJack.src.BlackJack;
+package BlackJack;
+
 public class Carta {
 
     /* Constantes */
