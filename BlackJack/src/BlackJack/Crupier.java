@@ -1,3 +1,4 @@
+package BlackJack.src.BlackJack;
 public class Crupier extends Jugador {
 
     /* Constantes */
