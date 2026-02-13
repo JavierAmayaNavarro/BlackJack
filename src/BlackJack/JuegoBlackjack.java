@@ -13,71 +13,72 @@ public class JuegoBlackjack {
 
     /* Atributos del juego */
 
-    private List<Jugador> jugadores; //Creamos un ArrayList de jugadores para representar a los jugadores en el juego
-    private Crupier crupier; //Creamos una variable de tipo Crupier para representar al crupier en el juego
+    private List<Jugador> jugadores; // Creamos un ArrayList de jugadores para representar a los jugadores en el juego
+    private Crupier crupier; // Creamos una variable de tipo Crupier para representar al crupier en el juego
     private Mazo mazo;
-    private Scanner scanner; //Creamos un objeto Scanner para leer la entrada del usuario
-    private int numero_de_Ronda; //Variable para llevar el conteo de las rondas del juego
+    private Scanner scanner; // Creamos un objeto Scanner para leer la entrada del usuario
+    private int numero_de_Ronda; // Variable para llevar el conteo de las rondas del juego
 
     /* Constructores del juego */
     public JuegoBlackjack() {
-        jugadores = new ArrayList<>(); //Inicializamos el ArrayList de jugadores
-        crupier = new Crupier("Crupier"); //Creamos un nuevo crupier
-        mazo = new Mazo(); //Creamos un nuevo mazo de cartas
-        scanner = new Scanner(System.in); //Inicializamos el Scanner para leer la entrada del usuario
-        numero_de_Ronda = 0; //Inicializamos el conteo de rondas a 0 }
+        jugadores = new ArrayList<>(); // Inicializamos el ArrayList de jugadores
+        crupier = new Crupier("Crupier"); // Creamos un nuevo crupier
+        mazo = new Mazo(); // Creamos un nuevo mazo de cartas
+        scanner = new Scanner(System.in); // Inicializamos el Scanner para leer la entrada del usuario
+        numero_de_Ronda = 0; // Inicializamos el conteo de rondas a 0
     }
 
-    /* Metodos del juego */
+    /* Métodos del juego */
 
-    //Metodo para mostrar la bienvenida al juego y la explicacion de las reglas
-    public void bienvenida_juego(){
+    // Método para mostrar la bienvenida al juego y la explicación de las reglas
+    public void bienvenida_juego() {
         System.out.println("\n" + LINEA);
         System.out.println("  ♠ ♥  BIENVENIDO AL BLACKJACK  ♦ ♣");
         System.out.println("  Gana el primero en conseguir " + PUNTOS_VICTORIA + " puntos.");
         System.out.println(LINEA);
-
     }
-    //Metodo para configurar los jugadores al inicio del juego, pipdiendo el numero de players, nombres y mostrando el total de players en la partida
+
+    // Método para configurar los jugadores al inicio del juego
     public void configurar_jugadores() {
-        System.out.println("Inserte el numero de jugadores (entre 4 y 7 jugadores): "); //Pedimos el numero de jugadores a los usuarios
-        int numJugadores = scanner.nextInt(); //Leemos el numer de jugadores ingresado
-        scanner.nextLine(); //Limpiamos el buffer del Scanner para evitar problemas al leer el nombre de los jugadores
-        while (numJugadores < 4 || numJugadores > 7) { //Validamos que el numero de jugadores sea entre 4 y 7
-            System.out.println("Numero de jugadores invalido. Ingrese un numero entre 4 y 7: ");
-            numJugadores = scanner.nextInt(); //Leemos el nuevo numero de jugadores ingresado por el usuario
-            scanner.nextLine(); //Limpiamos el buffer del Scanner
+        System.out.println("Inserte el número de jugadores (entre 4 y 7 jugadores): ");
+        int numJugadores = scanner.nextInt(); // Leemos el número de jugadores ingresado
+        scanner.nextLine(); // Limpiamos el buffer del Scanner
+        while (numJugadores < 4 || numJugadores > 7) { // Validamos que el número de jugadores sea entre 4 y 7
+            System.out.println("Número de jugadores inválido. Ingrese un número entre 4 y 7: ");
+            numJugadores = scanner.nextInt(); // Leemos el nuevo número de jugadores ingresado
+            scanner.nextLine(); // Limpiamos el buffer del Scanner
         }
-        for (int i = 0; i < numJugadores; i++) { //Bucle para agregar cada jugador al ArrayList de jugadores 
-            System.out.print("Ingrese el nombre del jugador " + (i + 1) + ": "); //Pedimos al usuario que ingrese el nombre de cada jugador 
-            String nombreJugador = scanner.nextLine(); //Leemos el nombre del jugador ingresado por el usuario
-            jugadores.add(new Jugador(nombreJugador)); //Agregamos el jugador al ArrayList de jugadores
+        for (int i = 0; i < numJugadores; i++) { // Bucle para agregar cada jugador al ArrayList de jugadores 
+            System.out.print("Ingrese el nombre del jugador " + (i + 1) + ": ");
+            String nombreJugador = scanner.nextLine(); // Leemos el nombre del jugador
+            jugadores.add(new Jugador(nombreJugador)); // Agregamos el jugador al ArrayList de jugadores
         }
-        System.out.println("En total hay "+jugadores.size() + " jugadores en la partida."); //Mostramos el numero total de jugadores en la partida
+        System.out.println("En total hay " + jugadores.size() + " jugadores en la partida.");
     }
 
     public void iniciarJuego() {
         bienvenida_juego();
         configurar_jugadores();
 
-        mazo = new Mazo(); //Creamos un nuevo mazo de cartas al iniciar el juego mazo.barajar(); //Barajamos el mazo de cartas al iniciar el juego
+        mazo = new Mazo(); // Creamos un nuevo mazo de cartas al iniciar el juego
+        mazo.barajar(); // Barajamos el mazo de cartas al iniciar el juego
 
-        while(!hayGanadorFinal()){// Mientras el juego no haya llegado a 5 puntos, se sigue jugando
-            numero_de_Ronda++; //Incrementamos el numero de rondas al comenzar una nueva ronda
-            System.out.println("\n" + LINEA_FINA); 
-            System.out.println(" ♠ ♥ RONDA " + numero_de_Ronda + " ♦ ♣"); 
+        while (!hayGanadorFinal()) { // Mientras el juego no haya llegado a 5 puntos, se sigue jugando
+            numero_de_Ronda++; // Incrementamos el número de rondas al comenzar una nueva ronda
+            System.out.println("\n" + LINEA_FINA);
+            System.out.println(" P C RONDA " + numero_de_Ronda + " D T");
             System.out.println(LINEA_FINA);
 
-            jugarRonda(); //Llamamos al metodo de jugarRonda para ejecutar una nueva ronda
-            mostrar_marcador(); // Mostramos el marcador al finaliza cada ronda para q los jugadores vean sus estadisticas
+            jugarRonda(); // Llamamos al método de jugarRonda para ejecutar una nueva ronda
+            mostrar_marcador(); // Mostramos el marcador al finalizar cada ronda
 
-            if (!hayGanadorFinal()) { //Si el juego no ha terminado, se le pide al usuario que pulse ENTER para continuar a la siguiente ronda
+            if (!hayGanadorFinal()) { // Si el juego no ha terminado, se le pide al usuario que pulse ENTER para continuar a la siguiente ronda
                 System.out.print("\n  Pulsa ENTER para la siguiente ronda...");
                 scanner.nextLine();
             }
         }
 
-            define_ganador_final();
+        define_ganador_final();
     }
 
     private void jugarRonda() {
@@ -196,7 +197,7 @@ public class JuegoBlackjack {
         }
     }
 
-    //Resolucion cuando el crupier tiene Blackjack natural
+    // Resolución cuando el crupier tiene Blackjack natural
     private void resolverRonda_crupierBlackjack() {
         System.out.println("\n  ─── RESULTADOS DE LA RONDA ───");
         boolean crupierGana = false;
@@ -210,7 +211,6 @@ public class JuegoBlackjack {
         }
         if (crupierGana) crupier.sumarPunto();
     }
-
 
     public int ganador(Jugador jugador) {
         int puntosJugador = jugador.getMano().obtenerValorMano();
@@ -233,7 +233,6 @@ public class JuegoBlackjack {
         if (puntosJugador < puntosCrupier) return -1;
         return 0;  // Empate (push)
     }
-
 
     private void resolverRonda() {
         System.out.println("\n  ─── RESULTADOS DE LA RONDA ───");
@@ -282,7 +281,7 @@ public class JuegoBlackjack {
         }
     }
 
-    //MOSTRAR TABLERO 
+    // MOSTRAR TABLERO
 
     public void mostrar_tablero(boolean mostrarTodo) {
         System.out.println("\n" + LINEA_FINA);
@@ -314,7 +313,7 @@ public class JuegoBlackjack {
         System.out.println(LINEA_FINA);
     }
 
-    //Marcador y ganador final 
+    // Marcador y ganador final
 
     private void mostrar_marcador() {
         System.out.println("\n  ─── MARCADOR ───");
@@ -329,7 +328,7 @@ public class JuegoBlackjack {
         for (int i = 0; i < PUNTOS_VICTORIA; i++) {
             sb.append(i < pts ? "★ " : "☆ ");
         }
-        sb.append(" (").append(pts).append("/").append(PUNTOS_VICTORIA).append(")");
+        sb.append(" (" + pts + "/" + PUNTOS_VICTORIA + ")");
         return sb.toString();
     }
 
@@ -356,7 +355,7 @@ public class JuegoBlackjack {
         System.out.println(LINEA);
     }
 
-    //Getters para acceder a los atributos del juego desde otras clases si es necesario
+    // Getters para acceder a los atributos del juego desde otras clases si es necesario
 
     public List<Jugador> getJugadores() { return jugadores; }
     public Crupier       getCrupier()   { return crupier;   }
