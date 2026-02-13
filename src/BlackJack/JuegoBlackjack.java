@@ -151,7 +151,7 @@ public class JuegoBlackjack {
 
         // Bucle de acciones del jugador
         while (!jugador.turnoTerminado()) {
-            System.out.println("  Mano: " + jugador.getMano() +
+            System.out.println("  Mano: " + formatMano(jugador.getMano()) +
                                "  →  Puntuación: " + jugador.getMano().obtenerValorMano());
             System.out.println("  [1] Pedir carta (Hit)   [2] Plantarse (Stand)");
             System.out.print("  Tu elección: ");
@@ -290,10 +290,10 @@ public class JuegoBlackjack {
 
         // Crupier
         if (mostrarTodo) {
-            System.out.println("  Crupier  → " + crupier.getMano()
+            System.out.println("  Crupier  → " + formatMano(crupier.getMano())
                     + "  [" + crupier.getPuntuacionTotal() + " pts]");
         } else {
-            System.out.println("  Crupier  → " + crupier.getMano()
+            System.out.println("  Crupier  → " + formatMano(crupier.getMano())
                     + "  [" + crupier.getPuntuacionVisible() + " pts visibles]");
         }
 
@@ -307,10 +307,26 @@ public class JuegoBlackjack {
             else if (j.isPlantado())       estado = "  ✔ PLANTADO";
 
             System.out.println("  " + j.getNombre()
-                    + "  → " + j.getMano()
+                    + "  → " + formatMano(j.getMano())
                     + "  [" + j.getMano().obtenerValorMano() + " pts]" + estado);
         }
         System.out.println(LINEA_FINA);
+    }
+
+    /* ---- Helpers para mostrar símbolos de palo ---- */
+    private String formatCarta(Carta c) {
+        if (c == null) return "";
+        String palo = c.getPalo();
+        String simbolo = (palo != null && palo.length() > 0) ? palo.substring(0, 1) : "";
+        return c.getValor() + simbolo;
+    }
+
+    private String formatMano(Mano mano) {
+        StringBuilder sb = new StringBuilder();
+        for (Carta c : mano.getCartas()) {
+            sb.append(formatCarta(c)).append(" ");
+        }
+        return sb.toString().trim();
     }
 
     // Marcador y ganador final
