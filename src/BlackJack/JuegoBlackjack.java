@@ -1,8 +1,8 @@
 package BlackJack;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.List;
+import java.util.Scanner;
 
 public class JuegoBlackjack {
 
@@ -18,14 +18,27 @@ public class JuegoBlackjack {
     private Mazo mazo;
     private Scanner scanner; // Creamos un objeto Scanner para leer la entrada del usuario
     private int numero_de_Ronda; // Variable para llevar el conteo de las rondas del juego
+    
+    /** NUEVO: Referencia a la interfaz gráfica (null si se ejecuta en consola) */
+    private InterfazJuegoBlackjack interfazGrafica;
 
     /* Constructores del juego */
-    public JuegoBlackjack() {
+    /**
+     * Constructor de JuegoBlackjack
+     * @param interfaz - Referencia a la interfaz gráfica (puede ser null para consola)
+     */
+    public JuegoBlackjack(InterfazJuegoBlackjack interfaz) {
+        this.interfazGrafica = interfaz;  // Guardar referencia a la interfaz
         jugadores = new ArrayList<>(); // Inicializamos el ArrayList de jugadores
         crupier = new Crupier("Crupier"); // Creamos un nuevo crupier
         mazo = new Mazo(); // Creamos un nuevo mazo de cartas
         scanner = new Scanner(System.in); // Inicializamos el Scanner para leer la entrada del usuario
         numero_de_Ronda = 0; // Inicializamos el conteo de rondas a 0
+    }
+    
+    /** Constructor sin interfaz gráfica (para modo consola) */
+    public JuegoBlackjack() {
+        this(null);  // Llamar al constructor principal con null
     }
 
     /* Métodos del juego */
@@ -81,7 +94,7 @@ public class JuegoBlackjack {
         define_ganador_final();
     }
 
-    private void jugarRonda() {
+    public void jugarRonda() {
         // 1. Preparar nueva ronda
         for (Jugador j : jugadores) j.reiniciarRonda();
         crupier.nuevaRonda();
@@ -89,12 +102,25 @@ public class JuegoBlackjack {
         // 2. Reparto inicial (2 cartas cada uno; 2ª carta del crupier boca abajo)
         repartirInicial();
         mostrar_tablero(false);
+        
+        // ACTUALIZAR GUI INMEDIATAMENTE DESPUÉS DEL REPARTO
+        if (interfazGrafica != null) {
+            interfazGrafica.actualizarTablero();
+            try {
+                Thread.sleep(800);  // Pausa para que vea las cartas
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
 
         // 3. Verificar Blackjack natural del crupier inmediatamente
         if (crupier.tieneBlackjack()) {
             System.out.println("\n  ⭐ ¡El CRUPIER tiene BLACKJACK NATURAL!");
             crupier.revelarCartaOculta();
             mostrar_tablero(true);
+            if (interfazGrafica != null) {
+                interfazGrafica.actualizarTablero();
+            }
             resolverRonda_crupierBlackjack();
             return;
         }
@@ -118,9 +144,24 @@ public class JuegoBlackjack {
         System.out.println(LINEA_FINA);
         crupier.jugarTurno(mazo);
         mostrar_tablero(true);
+        
+        // ACTUALIZAR GUI DESPUÉS DEL TURNO DEL CRUPIER
+        if (interfazGrafica != null) {
+            interfazGrafica.actualizarTablero();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
 
         // 7. Resolver ronda y asignar puntos
         resolverRonda();
+        
+        // ACTUALIZAR GUI AL FINAL DE LA RONDA
+        if (interfazGrafica != null) {
+            interfazGrafica.actualizarTablero();
+        }
     }
 
     // ─── Reparto inicial ────────────────────────────────────────────────────────
@@ -143,21 +184,56 @@ public class JuegoBlackjack {
         System.out.println("  TURNO DE: " + jugador.getNombre().toUpperCase());
         System.out.println(LINEA_FINA);
 
+        // Si hay interfaz gráfica, mostrar nombre del jugador
+        if (interfazGrafica != null) {
+            interfazGrafica.mostrarTurnoJugador(jugador.getNombre());
+            try {
+                Thread.sleep(500);  // Pequeña pausa para que vea el nombre
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
         // Blackjack natural automático
         if (jugador.getMano().tieneBlackjack()) {
             System.out.println("  ⭐ ¡BLACKJACK NATURAL! El turno pasa automáticamente.");
             return;
         }
 
-        // Bucle de acciones del jugador
+        // ════════════════════════════════════════════════════════════
+        // TURNO MANUAL DEL JUGADOR (NO AUTOMÁTICO)
+        // ════════════════════════════════════════════════════════════
+        
         while (!jugador.turnoTerminado()) {
             System.out.println("  Mano: " + formatMano(jugador.getMano()) +
                                "  →  Puntuación: " + jugador.getMano().obtenerValorMano());
             System.out.println("  [1] Pedir carta (Hit)   [2] Plantarse (Stand)");
-            System.out.print("  Tu elección: ");
+            
+            String entrada;
+            
+            // Si hay interfaz gráfica, pedir acción desde ahí
+            // Si no, usar Scanner (modo consola)
+            if (interfazGrafica != null) {
+                // MODO GRÁFICO: Esperar a que el usuario haga clic en un botón
+                entrada = interfazGrafica.obtenerAccion();
+                System.out.print("  Tu elección: " + entrada + "\n");
+            } else {
+                // MODO CONSOLA: Leer del teclado como antes
+                System.out.print("  Tu elección: ");
+                entrada = scanner.nextLine().trim();
+            }
 
-            String entrada = scanner.nextLine().trim();
             movimiento(jugador, entrada);
+            
+            // Actualizar tablero en GUI si existe
+            if (interfazGrafica != null) {
+                interfazGrafica.actualizarTableroDesdeJuego();
+                try {
+                    Thread.sleep(600);  // Pausa para ver los cambios
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
         }
     }
 
@@ -200,16 +276,29 @@ public class JuegoBlackjack {
     // Resolución cuando el crupier tiene Blackjack natural
     private void resolverRonda_crupierBlackjack() {
         System.out.println("\n  ─── RESULTADOS DE LA RONDA ───");
+        StringBuilder mensajeGanadores = new StringBuilder("⭐ ¡CRUPIER TIENE BLACKJACK!\n\n");
         boolean crupierGana = false;
+        
         for (Jugador j : jugadores) {
             if (j.getMano().tieneBlackjack()) {
                 System.out.println("  " + j.getNombre() + ": EMPATE (ambos con Blackjack)");
+                mensajeGanadores.append("= ").append(j.getNombre()).append(" - EMPATE\n");
             } else {
                 System.out.println("  " + j.getNombre() + ": PIERDE (crupier tiene Blackjack)");
+                mensajeGanadores.append("✗ ").append(j.getNombre()).append(" - PIERDE\n");
                 crupierGana = true;
             }
         }
-        if (crupierGana) crupier.sumarPunto();
+        
+        if (crupierGana) {
+            crupier.sumarPunto();
+            mensajeGanadores.append("\n✔ CRUPIER GANA LA RONDA");
+        }
+        
+        // Mostrar en GUI
+        if (interfazGrafica != null) {
+            interfazGrafica.mostrarResultadoRonda(mensajeGanadores.toString());
+        }
     }
 
     public int ganador(Jugador jugador) {
@@ -236,48 +325,87 @@ public class JuegoBlackjack {
 
     private void resolverRonda() {
         System.out.println("\n  ─── RESULTADOS DE LA RONDA ───");
+        StringBuilder mensajeGanadores = new StringBuilder("📊 RESULTADOS DE LA RONDA\n\n");
 
         if (crupier.estaPasado()) {
             System.out.println("  ⭐ ¡El CRUPIER se ha PASADO! Ganan todos los jugadores activos.");
+            mensajeGanadores.append("⭐ ¡CRUPIER SE PASÓ!\n\n");
+            
             for (Jugador j : jugadores) {
                 if (!j.isEliminado()) {
                     j.sumarPunto();
                     System.out.println("  ✔ " + j.getNombre() + " GANA (+1 punto → " + j.getPuntos() + ")");
+                    mensajeGanadores.append("✔ ").append(j.getNombre()).append(" - GANA\n");
                 } else {
                     System.out.println("  ✗ " + j.getNombre() + " PIERDE (se había pasado)");
+                    mensajeGanadores.append("✗ ").append(j.getNombre()).append(" - PIERDE (pasado)\n");
                 }
+            }
+            
+            // Mostrar en GUI
+            if (interfazGrafica != null) {
+                interfazGrafica.mostrarResultadoRonda(mensajeGanadores.toString());
             }
             return;
         }
-
-        // Comparación individual
-        boolean crupierGanaRonda = false;
+        // Determinar el máximo entre jugadores activos
+        int maxJugador = -1;
         for (Jugador j : jugadores) {
-            int resultado = ganador(j);
-            if (resultado == 1) {
-                j.sumarPunto();
-                System.out.println("  ✔ " + j.getNombre() + " GANA  |  "
-                        + j.getMano().obtenerValorMano() + " vs " + crupier.getPuntuacionTotal()
-                        + "  → Puntos: " + j.getPuntos());
-            } else if (resultado == 0) {
-                System.out.println("  = " + j.getNombre() + " EMPATA (push)  |  "
-                        + j.getMano().obtenerValorMano() + " vs " + crupier.getPuntuacionTotal());
-            } else {
-                crupierGanaRonda = true;
-                System.out.println("  ✗ " + j.getNombre() + " PIERDE  |  "
-                        + (j.isEliminado() ? "SE PASÓ" : j.getMano().obtenerValorMano())
-                        + " vs " + crupier.getPuntuacionTotal());
+            if (!j.isEliminado()) {
+                int val = j.getMano().obtenerValorMano();
+                if (val > maxJugador) maxJugador = val;
             }
         }
 
-        // El crupier suma punto si ganó a TODOS los jugadores activos
-        long jugadoresActivos = jugadores.stream().filter(j -> !j.isEliminado()).count();
-        long jugadoresCrupierGana = jugadores.stream()
-                .filter(j -> ganador(j) == -1 && !j.isEliminado()).count();
+        int puntosCrupier = crupier.getPuntuacionTotal();
 
-        if (crupierGanaRonda && jugadoresCrupierGana == jugadoresActivos) {
+        // Si el máximo jugador está por encima del crupier, solo los jugadores con ese máximo ganan
+        if (maxJugador > puntosCrupier) {
+            mensajeGanadores.append("★ Jugador(es) con la mejor mano ganan la ronda\n\n");
+            for (Jugador j : jugadores) {
+                if (!j.isEliminado() && j.getMano().obtenerValorMano() == maxJugador) {
+                    j.sumarPunto();
+                    System.out.println("  ✔ " + j.getNombre() + " GANA  |  "
+                            + j.getMano().obtenerValorMano() + " vs " + puntosCrupier
+                            + "  → Puntos: " + j.getPuntos());
+                    mensajeGanadores.append("✔ ").append(j.getNombre()).append(" - GANA (")
+                            .append(j.getMano().obtenerValorMano()).append(" vs ")
+                            .append(puntosCrupier).append(")\n");
+                } else if (!j.isEliminado()) {
+                    System.out.println("  ✗ " + j.getNombre() + " PIERDE  |  "
+                            + j.getMano().obtenerValorMano() + " vs " + puntosCrupier);
+                    mensajeGanadores.append("✗ ").append(j.getNombre()).append(" - PIERDE\n");
+                } else {
+                    mensajeGanadores.append("✗ ").append(j.getNombre()).append(" - PIERDE (pasado)\n");
+                }
+            }
+        } else if (maxJugador == puntosCrupier) {
+            // Empate global: no puntos para jugadores ni crupier
+            mensajeGanadores.append("= Empate general con el crupier. Ningún punto asignado.\n");
+            for (Jugador j : jugadores) {
+                if (!j.isEliminado()) {
+                    mensajeGanadores.append("= ").append(j.getNombre()).append(" - EMPATE\n");
+                } else {
+                    mensajeGanadores.append("✗ ").append(j.getNombre()).append(" - PIERDE (pasado)\n");
+                }
+            }
+        } else {
+            // Crupier gana la ronda
+            mensajeGanadores.append("✔ CRUPIER GANA LA RONDA\n");
             crupier.sumarPunto();
             System.out.println("  ✔ CRUPIER gana la ronda → Puntos: " + crupier.getPuntos());
+            for (Jugador j : jugadores) {
+                if (!j.isEliminado()) {
+                    mensajeGanadores.append("✗ ").append(j.getNombre()).append(" - PIERDE\n");
+                } else {
+                    mensajeGanadores.append("✗ ").append(j.getNombre()).append(" - PIERDE (pasado)\n");
+                }
+            }
+        }
+
+        // Mostrar en GUI
+        if (interfazGrafica != null) {
+            interfazGrafica.mostrarResultadoRonda(mensajeGanadores.toString());
         }
     }
 
@@ -348,12 +476,12 @@ public class JuegoBlackjack {
         return sb.toString();
     }
 
-    private boolean hayGanadorFinal() {
+    public boolean hayGanadorFinal() {
         if (crupier.getPuntos() >= PUNTOS_VICTORIA) return true;
         return jugadores.stream().anyMatch(j -> j.getPuntos() >= PUNTOS_VICTORIA);
     }
 
-    private void define_ganador_final() {
+    public void define_ganador_final() {
         System.out.println("\n" + LINEA);
         System.out.println("  ♠ ♥  FIN DE LA PARTIDA  ♦ ♣");
         System.out.println(LINEA);
@@ -371,9 +499,60 @@ public class JuegoBlackjack {
         System.out.println(LINEA);
     }
 
-    // Getters para acceder a los atributos del juego desde otras clases si es necesario
+    // ════════════════════════════════════════════════════════════════════════════
+    // MÉTODOS NUEVOS AGREGADOS PARA LA INTERFAZ GRÁFICA
+    // ════════════════════════════════════════════════════════════════════════════
 
+    /**
+     * MÉTODO NUEVO: agregarJugador()
+     * Permite agregar jugadores dinámicamente desde la interfaz gráfica
+     * (En la versión original, los jugadores se pedían por consola)
+     * 
+     * @param nombre - Nombre del jugador a agregar
+     */
+    public void agregarJugador(String nombre) {
+        // Validar que el nombre no sea nulo ni esté vacío
+        if (nombre != null && !nombre.trim().isEmpty()) {
+            // Crear un nuevo jugador y agregarlo a la lista
+            jugadores.add(new Jugador(nombre.trim()));
+        }
+    }
+
+    /**
+     * MÉTODO NUEVO: inicializarMazo()
+     * Crea un nuevo mazo de cartas y lo baraja
+     * 
+     * En la versión original, esto se hacía en iniciarJuego().
+     * Ahora está separado para que la interfaz gráfica tenga control sobre cuándo
+     * inicializar el mazo.
+     */
+    public void inicializarMazo() {
+        mazo = new Mazo();      // Crear un mazo nuevo
+        mazo.barajar();         // Barajarlo
+    }
+
+    // ════════════════════════════════════════════════════════════════════════════
+    // GETTERS: Métodos para acceder a los datos del juego desde otras clases
+    // ════════════════════════════════════════════════════════════════════════════
+
+    /** Obtener la lista de jugadores */
     public List<Jugador> getJugadores() { return jugadores; }
+    
+    /** Obtener una referencia al crupier */
     public Crupier       getCrupier()   { return crupier;   }
+    
+    /** Obtener una referencia al mazo */
     public Mazo          getMazo()      { return mazo;      }
+
+    /**
+     * Devuelve el ganador final de la partida si lo hay.
+     * Retorna null si el crupier fue el ganador final.
+     */
+    public Jugador getGanadorFinal() {
+        if (crupier.getPuntos() >= PUNTOS_VICTORIA) return null;
+        for (Jugador j : jugadores) {
+            if (j.getPuntos() >= PUNTOS_VICTORIA) return j;
+        }
+        return null;
+    }
 }
