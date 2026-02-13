@@ -69,5 +69,20 @@ public class Mano {
     public List<Carta> getCartas() { //Metodo para obtener la lista de cartas en la mano 
         return cartas;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Cartas en la mano: ");
+
+        for(Carta carta : cartas) {
+
+            sb.append(carta.toString()); // Llamamos al método toString() de la clase Carta para obtener su representación legible
+            sb.append(" "); // Añadimos un espacio entre las cartas
+
+        }
+
+        return sb.toString();
+    }
 }
 

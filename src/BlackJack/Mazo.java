@@ -34,14 +34,16 @@ public class Mazo{
     /* Metodo para repartir la carta del tope del mazo
     Si el mazo se agota, se reinicializa y vuelve a barajar automaticamente */
     public Carta repartirCarta() {
-        if (!cartas.isEmpty()) { //Esto sirve para comprobar que el mazo no esté vacío antes de repartir una carta
-            System.out.println("  ⚠ El mazo se ha agotado. Reiniciando y barajando..."); //En caso de que se agote el mazo, muestra que se ha agotado y se reinicia
-            iniciarMazo(); //Llamamos al metodo iniciarMazo para llenar el mazo con las cartas
-            barajar(); //Llamamos al metodo barajar para mezclar las cartas del mazo
-            return cartas.remove(cartas.size() - 1); //Devuelve la carta que esta primera en el mazo y la elimina del mazo
-        }
-        return cartas.remove(cartas.size() - 1); //Si el mazo esta vacio, devuelve la última carta del mazo (que ya no existe)
-        }
+    // Si el mazo está vacío, reiniciamos y barajamos
+    if (cartas.isEmpty()) {
+        System.out.println("  ⚠ El mazo se ha agotado. Reiniciando y barajando...");
+        iniciarMazo(); // Rellenamos el mazo con cartas
+        barajar(); // Barajamos las cartas
+    }
+
+    // Ahora que el mazo está lleno nuevamente, repartimos la carta
+        return cartas.pop(); // Usamos pop() para sacar la carta del tope de la pila
+    }   
 
     /* Devuelve el número de cartas restantes en el mazo. */
 
